@@ -44,9 +44,73 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
             IdentityUserId = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
             FirstName = "Admina",
             LastName = "Strator",
+            UserName = "Boss",
+            Email = "admina@strator.comx",
             Address = "101 Main Street",
         });
+        modelBuilder.Entity<Chore>().HasData(new Chore[]
+           {
+                new Chore
+                {
+                    Id = 1,
+                    Name = "Wash dishes",
+                    Difficulty = 2,
+                    ChoreFrequencyDays = 1
+                },
+                new Chore
+                {
+                    Id = 2,
+                    Name = "Vacuum floors",
+                    Difficulty = 3,
+                    ChoreFrequencyDays = 7
+                },
+                new Chore
+                {
+                    Id = 3,
+                    Name = "Take out trash",
+                    Difficulty = 1,
+                    ChoreFrequencyDays = 3
+                },
+                new Chore
+                {
+                    Id = 4,
+                    Name = "Clean bathroom",
+                    Difficulty = 4,
+                    ChoreFrequencyDays = 5
+                },
+                new Chore
+                {
+                    Id = 5,
+                    Name = "Mow the lawn",
+                    Difficulty = 5,
+                    ChoreFrequencyDays = 14
+                }
+           });
+        modelBuilder.Entity<ChoreAssignment>().HasData(new ChoreAssignment[]
+           {
+               new ChoreAssignment
+               {
+                   Id = 1,
+                   UserProfileId = 1,
+                   ChoreId = 1
+               },
+               new ChoreAssignment
+               {
+                   Id = 2,
+                   UserProfileId = 1,
+                   ChoreId = 3
+               }
+           });
+        modelBuilder.Entity<ChoreCompletion>().HasData(new ChoreCompletion[]
+           {
+               new ChoreCompletion
+               {
+                   Id = 1,
+                   UserProfileId = 1, 
+                   ChoreId = 1,  
+                   CompletedOn = DateTime.Now.AddDays(-1)  
+               }
+           });
 
-     
     }
 }

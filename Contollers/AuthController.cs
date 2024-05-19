@@ -129,40 +129,50 @@ public class AuthController : ControllerBase
             UserName = registration.UserName,
             Email = registration.Email
         };
-
-        //var password = Encoding.UTF8.GetString(Convert.FromBase64String(registration.Password));
+        // var password = Encoding.UTF8.GetString(Convert.FromBase64String(registration.Password));
 
         var password = Encoding
             .GetEncoding("iso-8859-1")
             .GetString(Convert.FromBase64String(registration.Password));
-
-        var result = await _userManager.CreateAsync(user, password);
-        if (result.Succeeded)
+        try 
         {
-            _dbContext.UserProfiles.Add(new UserProfile
-            {
-                FirstName = registration.FirstName,
-                LastName = registration.LastName,
-                Address = registration.Address,
-                IdentityUserId = user.Id,
-            });
-            _dbContext.SaveChanges();
-
-            var claims = new List<Claim>
+            var result = await _userManager.CreateAsync(user, password);
+            if (result.Succeeded)
+        {
+            
+                _dbContext.UserProfiles.Add(new UserProfile
+                {
+                    FirstName = registration.FirstName,
+                    LastName = registration.LastName,
+                    Address = registration.Address,
+                    UserName = registration.UserName,
+                    Email = registration.Email,
+                    IdentityUserId = user.Id,
+                });
+                _dbContext.SaveChanges();
+                var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName.ToString()),
                     new Claim(ClaimTypes.Email, user.Email)
 
                 };
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                HttpContext.SignInAsync(
+          CookieAuthenticationDefaults.AuthenticationScheme,
+          new ClaimsPrincipal(claimsIdentity)).Wait();
 
-            HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(claimsIdentity)).Wait();
+                return Ok();
+          
 
-            return Ok();
         }
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+        
+        
         return StatusCode(500);
     }
 }
