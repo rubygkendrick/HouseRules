@@ -8,6 +8,9 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
 {
     private readonly IConfiguration _configuration;
     public DbSet<UserProfile> UserProfiles { get; set; }
+    public DbSet<Chore> Chore { get; set; }
+    public DbSet<ChoreCompletion> ChoreCompletion { get; set; }
+    public DbSet<ChoreAssignment> ChoreAssignment { get; set; }
 
     public HouseRulesDbContext(DbContextOptions<HouseRulesDbContext> context, IConfiguration config) : base(context)
     {
@@ -106,9 +109,9 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
                new ChoreCompletion
                {
                    Id = 1,
-                   UserProfileId = 1, 
-                   ChoreId = 1,  
-                   CompletedOn = DateTime.Now.AddDays(-1)  
+                   UserProfileId = 1,
+                   ChoreId = 1,
+                   CompletedOn = DateTime.Now.AddDays(-1)
                }
            });
 

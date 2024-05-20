@@ -62,6 +62,44 @@ public class UserProfileController : ControllerBase
         }));
     }
 
-  
+    [HttpGet("{id}")]
+    [Authorize]
+    public IActionResult GetById(int id)
+    {
+        UserProfile user = _dbContext.UserProfiles
+        .Include(u => u.ChoreAssignments)
+            .ThenInclude(ca => ca.Chore)
+        .Include(u => u.ChoreCompletions)
+            .ThenInclude(cc => cc.Chore)
+        .SingleOrDefault(u => u.Id == id);
 
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(new UserProfileDTO
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Address = user.Address,
+            Email = user.Email,
+            UserName = user.UserName,
+            AssignedChores = user.ChoreAssignments.Select(ca => new ChoreDTO
+            {
+                Id = ca.Chore.Id,
+                Name = ca.Chore.Name,
+                Difficulty = ca.Chore.Difficulty,
+                ChoreFrequencyDays = ca.Chore.ChoreFrequencyDays
+            }).ToList(),
+            CompletedChores = user.ChoreCompletions.Select(cc => new ChoreDTO
+            {
+                Id = cc.Chore.Id,
+                Name = cc.Chore.Name,
+                Difficulty = cc.Chore.Difficulty,
+                ChoreFrequencyDays = cc.Chore.ChoreFrequencyDays
+            }).ToList()
+        });
+    }
 }

@@ -8,6 +8,7 @@ public class ChoreCompletionDTO
     public int UserProfileId { get; set; }
     
     public int ChoreId { get; set; }
+     public ChoreDTO Chore { get; set; }
 
     public DateTime CompletedOn { get; set; }
 

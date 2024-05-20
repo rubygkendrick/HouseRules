@@ -19,6 +19,11 @@ public class UserProfile
 
     public IdentityUser IdentityUser { get; set; }
 
+    public List<ChoreAssignment> ChoreAssignments { get; set; }
+    public List<ChoreCompletion> ChoreCompletions { get; set; }
+
+  
+
     public string Email { get; set; }
 
 }

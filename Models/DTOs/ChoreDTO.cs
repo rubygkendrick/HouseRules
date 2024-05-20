@@ -12,5 +12,6 @@ public class ChoreDTO
     public int ChoreFrequencyDays {get; set;}
 
     public List<ChoreCompletionDTO> ChoreCompletions {get; set;}
+    public List<ChoreAssignmentDTO> ChoreAssignments {get; set;}
 
 }

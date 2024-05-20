@@ -19,7 +19,11 @@ public class UserProfileDTO
     public string IdentityUserId { get; set; }
 
     public IdentityUser IdentityUser { get; set; }
- 
+
+    public List<ChoreDTO> AssignedChores{ get; set; }
+
+    public List<ChoreDTO> CompletedChores{ get; set; }
+   
     public string Email { get; set; }
 
 }
