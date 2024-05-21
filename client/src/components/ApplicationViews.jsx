@@ -3,9 +3,13 @@ import { Route, Routes } from "react-router-dom";
 import { AuthorizedRoute } from "./auth/AuthorizedRoute";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
+import { Home } from "./Home.jsx";
+import UserProfileList from "./UserProfileList.jsx";
+import UserProfileDetails from "./UserProfileDetails.jsx";
+import ChoresList from "./ChoresList.jsx";
 
 
-export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
+export default function ApplicationViews({ loggedInUser, setLoggedInUser, roles }) {
   return (
     <Routes>
       <Route path="/">
@@ -13,7 +17,7 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
           index
           element={
             <AuthorizedRoute loggedInUser={loggedInUser}>
-              <>HELLO</>
+              <Home />
             </AuthorizedRoute>
           }
         />
@@ -27,7 +31,34 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
           element={<Register setLoggedInUser={setLoggedInUser} />}
         />
       </Route>
-      <Route path="*" element={<p>Whoops, nothing here...</p>} />
+      <Route
+        path="userprofiles"
+        element={
+          <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
+            <UserProfileList />
+          </AuthorizedRoute>
+        }
+      />
+      <Route
+        path="userprofiles/:id"
+        element={
+          <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
+            <UserProfileDetails />
+          </AuthorizedRoute>
+        }
+      />
+        <Route path="chores">
+        <Route
+          index
+          element={
+            <AuthorizedRoute loggedInUser={loggedInUser} >
+              <ChoresList loggedInUser={loggedInUser} />
+            </AuthorizedRoute>
+          }
+        />
+       
+      </Route>
+      
     </Routes>
   );
 }

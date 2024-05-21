@@ -23,6 +23,7 @@ public class UserProfileDTO
     public List<ChoreDTO> AssignedChores{ get; set; }
 
     public List<ChoreDTO> CompletedChores{ get; set; }
+    public List<ChoreCompletionDTO> ChoreCompletions {get; set;}
    
     public string Email { get; set; }
 

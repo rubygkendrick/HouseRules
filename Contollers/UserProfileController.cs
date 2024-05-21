@@ -98,8 +98,17 @@ public class UserProfileController : ControllerBase
                 Id = cc.Chore.Id,
                 Name = cc.Chore.Name,
                 Difficulty = cc.Chore.Difficulty,
-                ChoreFrequencyDays = cc.Chore.ChoreFrequencyDays
+                ChoreFrequencyDays = cc.Chore.ChoreFrequencyDays,
+                ChoreCompletions = cc.Chore.ChoreCompletions.Select(choreC => new ChoreCompletionDTO
+                {
+                Id = choreC.Id,
+                CompletedOn = choreC.CompletedOn,
+                UserProfileId = choreC.UserProfileId,
+                ChoreId = choreC.ChoreId
+
+                }).ToList()
             }).ToList()
+          
         });
     }
 }
