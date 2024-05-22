@@ -7,6 +7,8 @@ import { Home } from "./Home.jsx";
 import UserProfileList from "./UserProfileList.jsx";
 import UserProfileDetails from "./UserProfileDetails.jsx";
 import ChoresList from "./ChoresList.jsx";
+import ChoreDetails from "./ChoreDetails.jsx";
+import CreateChore from "./CreateChore.jsx";
 
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser, roles }) {
@@ -47,7 +49,7 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser, roles 
           </AuthorizedRoute>
         }
       />
-        <Route path="chores">
+      <Route path="chores">
         <Route
           index
           element={
@@ -56,9 +58,25 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser, roles 
             </AuthorizedRoute>
           }
         />
-       
+        <Route
+          path=":id"
+          element={
+            <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
+              <ChoreDetails loggedInUser={loggedInUser} />
+            </AuthorizedRoute>
+          }
+        />
+         <Route
+          path="create"
+          element={
+            <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
+              <CreateChore loggedInUser={loggedInUser} />
+            </AuthorizedRoute>
+          }
+        />
+
       </Route>
-      
+
     </Routes>
   );
 }

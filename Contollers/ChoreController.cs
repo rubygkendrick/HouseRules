@@ -79,6 +79,7 @@ public class ChoreController : ControllerBase
             {
                 Id = cc.Id,
                 UserProfileId = cc.UserProfileId,
+                ChoreId = cc.ChoreId,
                 CompletedOn = cc.CompletedOn
             }).ToList()
         });
@@ -226,36 +227,21 @@ public class ChoreController : ControllerBase
         return NoContent();
     }
 
-    //POST /api/chore/{id}/unassign
-    //This endpoint will unassign a chore to a user.
-    //Pass the userId in as a query string param, as in the other endpoints above.
 
-    [HttpPost("{id}/unassign")]
+
+    [HttpDelete("{id}/unassign")]
     [Authorize(Roles = "Admin")]
     public IActionResult unassignChore(int id, [FromQuery] int userId)
     {
-        Chore choreToUnassign = _dbContext.Chore.SingleOrDefault(c => c.Id == id);
+       
+         ChoreAssignment choreToUnassign = _dbContext.ChoreAssignment.SingleOrDefault(ca => ca.UserProfileId == userId && ca.ChoreId == id);
 
-        if (choreToUnassign == null)
-        {
-            return NotFound("chore not found");
-        }
-
-        UserProfile userToUnassign = _dbContext.UserProfiles.SingleOrDefault(u => u.Id == userId);
-
-        if (userToUnassign == null)
-        {
-            return NotFound("user not found");
-        }
-
-        var choreCompletion = new ChoreCompletion
-        {
-            ChoreId = id,
-            UserProfileId = userId,
-            CompletedOn = DateTime.Now
-
-        };
-        _dbContext.ChoreCompletion.Add(choreCompletion);
+         if (choreToUnassign == null)
+         {
+            return BadRequest("this assignment doesnt exist");
+         }
+;        
+        _dbContext.ChoreAssignment.Remove(choreToUnassign);
 
         _dbContext.SaveChanges();
 
