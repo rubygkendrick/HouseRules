@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
+import {Button} from "reactstrap";
 
-import { useParams } from "react-router-dom";
-import { assignChore, getChoreById, unassignChore } from "../managers/choreManager";
+import { useNavigate, useParams } from "react-router-dom";
+import { assignChore, getChoreById, unassignChore, updateChore } from "../managers/choreManager";
 import { getUserProfiles } from "../managers/userManager";
 
-//need to get all of the users and display them in checkboxes
-//hold state of the current assignees
-//hold state of the new assignees
-//on the change we want to update the database with the choreassignments 
-//need access to the choreAssignments table
 
 export default function ChoreDetails() {
     const [chore, setChore] = useState([]);
     const { id } = useParams();
     const [users, setUsers] = useState([]);
-   
+    const [choreName, setChoreName] = useState("");
+    const [choreDifficulty, setChoreDifficulty] = useState(0);
+    const [choreFrequency, setChoreFrequecy] = useState(0);
+    const navigate = useNavigate();
 
     const getAndResetChore = () => {
         getChoreById(id).then(setChore);
@@ -26,12 +25,23 @@ export default function ChoreDetails() {
 
     const handleCheckboxChange = (event, userId) => {
         const isChecked = event.target.checked;
+
         if (isChecked) {
-            assignChore(chore.id,userId).then(() => getAndResetChore());
+            assignChore(chore.id, userId).then(() => getAndResetChore());
         } else {
-            unassignChore(chore.id,userId).then(() => getAndResetChore());
+            unassignChore(chore.id, userId).then(() => getAndResetChore());
         }
     };
+
+    const handleUpdateChore = () => {
+        const updatedChore = {
+            id: chore.id,
+            name: choreName,
+            difficulty: choreDifficulty,
+            choreFrequencyDays: choreFrequency
+        }
+        updateChore(updatedChore).then(() => navigate("/chores"))
+    }
 
     useEffect(() => {
         getAndResetChore();
@@ -50,14 +60,44 @@ export default function ChoreDetails() {
                 className=""
             >
                 <h4>Name:</h4>
-                <p>{chore.name}</p>
-                <h4>Difficulty Level:</h4>
-                <p>{chore.difficulty}</p>
+                <fieldset>
+                    <div className="form-group">
+                        <div className="form-radio">
 
+                            <label key={chore.id} >
+                                <input className="checkbox"
+                                    type="text"
+                                    placeholder={chore.name}
+                                    onChange={(event) => {
+                                        setChoreName(event.target.value)
+                                    }}
+                                >
+                                </input>
+                            </label>
+                        </div>
+
+                    </div>
+                </fieldset>
+                <h4>Difficulty Level:</h4>
+                <fieldset>
+                    <div className="form-group">
+                        <div className="form-radio">
+                            <label key={chore.id} >
+                                <input className="checkbox"
+                                    type="number"
+                                    placeholder={chore.difficulty}
+                                    onChange={(event) => {   
+                                        setChoreDifficulty(parseInt(event.target.value))
+                                    }}
+                                >
+                                </input>
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
                 <h4>Current Assignees:</h4>
                 <fieldset>
                     <div className="form-group">
-
                         <div className="form-radio">
                             {users.map(user => (
                                 <label key={user.id} >
@@ -72,6 +112,23 @@ export default function ChoreDetails() {
                                 </label>
                             ))}
                         </div>
+                    </div>
+                </fieldset>
+                <h4>Chore Frequency:</h4>
+                <fieldset>
+                    <div className="form-group">
+                        <div className="form-radio">
+                            <label key={chore.id} >
+                                <input className="checkbox"
+                                    type="text"
+                                    placeholder={chore.choreFrequencyDays}
+                                    onChange={(event) => {
+                                        setChoreFrequecy(parseInt(event.target.value))
+                                    }}
+                                >
+                                </input>
+                            </label>
+                        </div>
 
                     </div>
                 </fieldset>
@@ -83,6 +140,11 @@ export default function ChoreDetails() {
                         <div>No completions yet</div>
                     )}
                 </div>
+            </div>
+            <div>
+                <Button color={"danger"}
+                onClick={handleUpdateChore}
+                >Update Chore</Button>
             </div>
 
         </>

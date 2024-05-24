@@ -30,7 +30,7 @@ export default function ChoresList({ loggedInUser, setLoggedInUser, roles }) {
                     key={chore.id}
                     className=""
                 >
-                    <h4>{chore.name}</h4>
+                    <h4 style={{ color: chore.overdue ? "red" : "black" }}>{chore.name}</h4>
                     <p>Difficulty Level: {chore.difficulty}</p>
                     <p>Frequency Days: {chore.choreFrequencyDays}</p>
                     <Button color="success" onClick={() => choreCompleted(chore.id, loggedInUser.id).then(navigate("/"))}>Complete Chore</Button>

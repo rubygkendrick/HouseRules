@@ -86,6 +86,12 @@ public class UserProfileController : ControllerBase
             Address = user.Address,
             Email = user.Email,
             UserName = user.UserName,
+            ChoreAssignments = user.ChoreAssignments.Select(ca => new ChoreAssignmentDTO
+            {
+                Id = ca.Chore.Id,
+                UserProfileId = ca.UserProfileId,
+                ChoreId = ca.ChoreId
+            }).ToList(),
             AssignedChores = user.ChoreAssignments.Select(ca => new ChoreDTO
             {
                 Id = ca.Chore.Id,
@@ -101,14 +107,14 @@ public class UserProfileController : ControllerBase
                 ChoreFrequencyDays = cc.Chore.ChoreFrequencyDays,
                 ChoreCompletions = cc.Chore.ChoreCompletions.Select(choreC => new ChoreCompletionDTO
                 {
-                Id = choreC.Id,
-                CompletedOn = choreC.CompletedOn,
-                UserProfileId = choreC.UserProfileId,
-                ChoreId = choreC.ChoreId
+                    Id = choreC.Id,
+                    CompletedOn = choreC.CompletedOn,
+                    UserProfileId = choreC.UserProfileId,
+                    ChoreId = choreC.ChoreId
 
                 }).ToList()
             }).ToList()
-          
+
         });
     }
 }

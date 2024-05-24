@@ -9,6 +9,7 @@ import UserProfileDetails from "./UserProfileDetails.jsx";
 import ChoresList from "./ChoresList.jsx";
 import ChoreDetails from "./ChoreDetails.jsx";
 import CreateChore from "./CreateChore.jsx";
+import MyChores from "./MyChores.jsx";
 
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser, roles }) {
@@ -46,6 +47,14 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser, roles 
         element={
           <AuthorizedRoute roles={["Admin"]} loggedInUser={loggedInUser}>
             <UserProfileDetails />
+          </AuthorizedRoute>
+        }
+      />
+       <Route
+        path="userprofiles/mychores/:id"
+        element={
+          <AuthorizedRoute loggedInUser={loggedInUser}>
+            <MyChores />
           </AuthorizedRoute>
         }
       />

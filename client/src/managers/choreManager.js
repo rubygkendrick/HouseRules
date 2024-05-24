@@ -15,7 +15,9 @@ export const createChore = (chore) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(chore),
-  })
+  }).then((res) => res.json())
+  
+  
 };
 
 export const choreCompleted = (choreId, userId) => {
@@ -45,6 +47,16 @@ export const unassignChore = (choreId, userId) => {
       "Content-Type": "application/json",
     },
   });
+};
+
+export const updateChore = (chore) => {
+  return fetch(`${apiUrl}/${chore.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify( chore ),
+  })
 };
 
 

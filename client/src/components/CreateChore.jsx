@@ -8,6 +8,7 @@ export default function CreateChore({ loggedInUser }) {
     const [name, setName] = useState("");
     const [difficulty, setDifficulty] = useState(0);
     const [choreFrequencyDays, setChoreFrequencyDays] = useState(0);
+    const [errors, setErrors] = useState({});
 
     const navigate = useNavigate();
 
@@ -19,15 +20,24 @@ export default function CreateChore({ loggedInUser }) {
             choreFrequencyDays: parseInt(choreFrequencyDays)
         };
 
-        createChore(newChore).then(() => {
-            navigate("/chores");
-        });
+        createChore(newChore).then((res) => {
+            if (res.errors) {
+                setErrors(res.errors);
+            } else {
+                navigate("/chores/create");
+            }
+        })
     };
-
 
     return (
         <>
-            <h2>Create a New Chore</h2>
+            <div style={{ color: "red" }}>
+                {errors && Object.keys(errors).map((key) => (
+                    <p key={key}>
+                        {key}: {errors[key].join(",")}
+                    </p>
+                ))}
+            </div>
             <Form>
                 <FormGroup>
                     <Label>Name</Label>
@@ -43,7 +53,7 @@ export default function CreateChore({ loggedInUser }) {
                     <Label>Difficulty level: 1 - 10</Label>
                     <Input
                         type="text"
-                        value= {difficulty}
+                        value={difficulty}
                         onChange={(e) => {
                             setDifficulty(e.target.value);
                         }}
@@ -52,17 +62,25 @@ export default function CreateChore({ loggedInUser }) {
                 <FormGroup>
                     <Label>Frequency Days</Label>
                     <Input
-                        type="text"
-                        value= {choreFrequencyDays}
-                        onChange={(e) => {
-                            setChoreFrequencyDays(e.target.value);
-                        }}
+                        type="number"
+                        list="frequencyOptions"
+                        value={choreFrequencyDays}
+                        onChange={(e) => setChoreFrequencyDays(e.target.value)}
                     />
+                    <datalist id="frequencyOptions">
+                        <option value="1" />
+                        <option value="3" />
+                        <option value="7" />
+                        <option value="10" />
+                        <option value="14" />
+                    </datalist>
                 </FormGroup>
                 <Button onClick={handleSubmit} color="primary">
                     Submit
                 </Button>
             </Form>
+
+
         </>
     );
 }

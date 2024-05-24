@@ -26,13 +26,27 @@ public class ChoreController : ControllerBase
     [Authorize]
     public IActionResult Get()
     {
-        return Ok(_dbContext.Chore
+        return Ok(_dbContext.Chore.Include(c => c.ChoreCompletions)
             .Select(c => new ChoreDTO
             {
                 Id = c.Id,
                 Name = c.Name,
                 Difficulty = c.Difficulty,
-                ChoreFrequencyDays = c.ChoreFrequencyDays
+                ChoreFrequencyDays = c.ChoreFrequencyDays,
+                ChoreAssignments = c.ChoreAssignments.Select(ca => new ChoreAssignmentDTO
+                {
+                    Id = ca.Id,
+                    UserProfileId = ca.UserProfileId
+
+                }).ToList(),
+            
+                ChoreCompletions = c.ChoreCompletions.Select(cc => new ChoreCompletionDTO
+                {
+                    Id = cc.Id,
+                    UserProfileId = cc.UserProfileId,
+                    ChoreId = cc.ChoreId,
+                    CompletedOn = cc.CompletedOn
+                }).ToList()
             })
             .ToList());
     }
@@ -137,6 +151,7 @@ public class ChoreController : ControllerBase
         {
             return BadRequest();
         }
+
         _dbContext.Chore.Add(choreToAdd);
 
         _dbContext.SaveChanges();
@@ -156,10 +171,7 @@ public class ChoreController : ControllerBase
         {
             return NotFound();
         }
-        else if (id != choreToUpdate.Id)
-        {
-            return BadRequest();
-        }
+
 
         choreToUpdate.Name = chore.Name;
         choreToUpdate.Difficulty = chore.Difficulty;
@@ -233,14 +245,14 @@ public class ChoreController : ControllerBase
     [Authorize(Roles = "Admin")]
     public IActionResult unassignChore(int id, [FromQuery] int userId)
     {
-       
-         ChoreAssignment choreToUnassign = _dbContext.ChoreAssignment.SingleOrDefault(ca => ca.UserProfileId == userId && ca.ChoreId == id);
 
-         if (choreToUnassign == null)
-         {
+        ChoreAssignment choreToUnassign = _dbContext.ChoreAssignment.SingleOrDefault(ca => ca.UserProfileId == userId && ca.ChoreId == id);
+
+        if (choreToUnassign == null)
+        {
             return BadRequest("this assignment doesnt exist");
-         }
-;        
+        }
+;
         _dbContext.ChoreAssignment.Remove(choreToUnassign);
 
         _dbContext.SaveChanges();

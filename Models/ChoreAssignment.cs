@@ -11,5 +11,25 @@ public class ChoreAssignment
 
     public int ChoreId { get; set; }
     public Chore? Chore { get; set; }
+    public bool Overdue
+    {
+        get
+        {
+            if (Chore == null)
+            {
+                return false;
+            }
+
+            if (Chore.Overdue == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+    }
 
 }

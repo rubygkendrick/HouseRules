@@ -49,6 +49,15 @@ export default function NavBar({ loggedInUser, setLoggedInUser, roles }) {
                                     </NavItem>
                              
                             </Nav>
+                            <Nav navbar>
+                               
+                               <NavItem onClick={() => setOpen(false)}>
+                               <NavLink tag={RRNavLink} to={`/userProfiles/mychores/${loggedInUser.id}`}>
+                                       My Chores
+                                   </NavLink>
+                               </NavItem>
+                        
+                       </Nav>
 
                         </Collapse>
                         <Button
